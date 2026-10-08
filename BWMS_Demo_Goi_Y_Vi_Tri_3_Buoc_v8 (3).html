@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BWMS Demo - Gợi ý vị trí lưu trữ</title>
+<style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef2f7;color:#1f2937}
+    .top{height:74px;background:#1553a5;color:white;display:flex;align-items:center;padding:0 18px}
+    .logo{width:190px;height:74px;background:white;color:#1553a5;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;margin-left:-18px}
+    .menu{font-size:25px;margin-left:20px}
+    .top-right{margin-left:auto;display:flex;gap:30px;align-items:center;font-size:14px}
+    .layout{display:flex;min-height:calc(100vh - 74px)}
+    .side{width:230px;background:#0b416f;color:#fff}
+    .student{padding:18px;font-size:17px;font-weight:700;background:#09385f}
+    .nav-title{padding:15px;color:#ffb000;font-size:12px;font-weight:700}
+    .nav{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.05);font-size:15px}
+    .nav.active{background:#1760a0}
+    .content{flex:1;padding:28px 34px}
+    .crumb{font-size:14px;color:#64748b;margin-bottom:8px}
+    h1{font-size:27px;margin:0 0 22px;color:#183b63}
+    .card{background:#fff;border-radius:7px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:22px;margin-bottom:20px}
+    .card h2{font-size:19px;color:#1553a5;margin:0 0 18px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+    label{display:block;font-size:13px;font-weight:700;margin-bottom:7px;color:#475569}
+    input,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:5px;font-size:14px;background:#fff}
+    .btn{margin-top:24px;background:#f39c12;color:white;border:0;border-radius:5px;padding:12px 20px;font-weight:700;cursor:pointer}
+    .btn:hover{background:#dc8808}
+    .summary{display:flex;gap:15px;margin-bottom:18px}
+    .stat{flex:1;background:#f8fafc;border-left:4px solid #1553a5;padding:13px 15px;border-radius:4px}
+    .stat b{display:block;font-size:20px;color:#1553a5;margin-top:5px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{background:#1553a5;color:white;text-align:left;padding:11px}
+    td{padding:10px;border-bottom:1px solid #e2e8f0}
+    tr:hover{background:#f8fafc}
+    .rank{font-weight:700;color:#1553a5}
+    .badge{display:inline-block;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:700}
+    .good{background:#dcfce7;color:#166534}
+    .warn{background:#fef3c7;color:#92400e}
+    .full{background:#fee2e2;color:#991b1b}
+    .recommend{background:#eff6ff;border:1px solid #bfdbfe}
+    .reason{color:#475569}
+    .footer{color:#64748b;font-size:12px;text-align:right;padding:12px}
+    @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.side{width:190px}}
+
+    .steps{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
+    .step{background:#fff;border:1px solid #dbe3ee;border-radius:6px;padding:10px 8px;text-align:center;font-size:11px;color:#64748b}
+    .step b{display:block;color:#1553a5;font-size:13px;margin-bottom:4px}
+    .step.active{border:2px solid #f39c12;background:#fff8eb;color:#334155}
+    .decision{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px;padding:15px;background:#f8fafc;border-radius:6px}
+    .btn.secondary{background:#1553a5}
+    .btn.danger{background:#b91c1c}
+    .btn.success{background:#15803d}
+    .btn.gray{background:#64748b}
+    .decision select,.decision input{max-width:330px;margin-top:0}
+    .notice{padding:12px 14px;border-radius:5px;margin-top:12px;font-size:13px;display:none}
+    .notice.ok{display:block;background:#dcfce7;color:#166534;border:1px solid #86efac}
+    .notice.warn{display:block;background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+    .reason-list{font-size:13px;line-height:1.7}
+    .reason-list li{margin-bottom:4px}
+    .audit{max-height:190px;overflow:auto}
+    .audit td{vertical-align:top}
+    .mini{font-size:12px;color:#64748b}
+    @media(max-width:1100px){.steps{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:700px){.steps{grid-template-columns:repeat(2,1fr)}}
+
+</style>
+<style>
+#p3 table{font-size:12px}
+#p3 table th,#p3 table td{padding:9px 8px;vertical-align:middle}
+#p3 .reason{min-width:190px;line-height:1.35}
+#p3 .choose-row{white-space:nowrap}
+</style>
+
+</head>
+<body>
+<div class="top">
+    <div class="logo">U&I LOGISTICS</div>
+    <div class="menu">☰</div>
+    <div class="top-right">
+        <span>🏢 Kho: Kho ngoại quan số 6</span>
+        <span>👤 Chủ hàng: BS-BASSETT A</span>
+        <span>VS</span>
+    </div>
+</div>
+
+<div class="layout">
+<aside class="side">
+    <div class="student">🟢 SINH VIÊN</div>
+    <div class="nav-title">MAIN NAVIGATION</div>
+    <div class="nav">⚙ Hệ Thống</div>
+    <div class="nav">▦ Danh Mục</div>
+    <div class="nav active">📦 Hàng Nhập</div>
+    <div class="nav">🚚 Hàng Xuất</div>
+    <div class="nav">🔍 Kiểm Kho</div>
+    <div class="nav active">📍 Gợi ý vị trí</div>
+</aside>
+
+<main class="content">
+    <div class="crumb">Hàng Nhập / Gợi ý vị trí lưu trữ</div>
+    <h1>Gợi ý vị trí lưu trữ hàng hóa</h1>
+<style>
+.wizard{display:flex;background:#fff;border-radius:7px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);margin:20px 0}
+.wstep{flex:1;padding:12px 6px;text-align:center;color:#64748b;font-size:12px;border-right:1px solid #e2e8f0;cursor:pointer}
+.wstep b{display:block;font-size:14px;margin-bottom:3px}
+.wstep.active{background:#1553a5;color:#fff}.wstep.done{background:#e8f2ff;color:#1553a5}
+.panel{display:none}.panel.active{display:block}
+.actions{display:flex;justify-content:space-between;margin-top:20px}.actions div{display:flex;gap:10px}
+.btn.blue{background:#1553a5}.btn.green{background:#15803d}.btn.red{background:#b91c1c}.btn.gray{background:#64748b}
+.sku{border:1px solid #dbe3ee;border-radius:6px;padding:15px;margin-top:12px;background:#fafcff}
+.sku-title{font-weight:700;color:#1553a5;margin-bottom:12px}
+.sku-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.readonly{background:#f1f5f9}
+.info{padding:13px 15px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;border-radius:6px;font-size:13px;line-height:1.6}
+.warnbox{padding:13px 15px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:6px;font-size:13px;line-height:1.6}
+.criteria{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.criterion{background:#f8fafc;border-left:4px solid #1553a5;padding:12px;font-size:13px;line-height:1.5}
+.criterion b{display:block;color:#1553a5;margin-bottom:4px}
+.physical{background:#fff7ed;border:1px solid #fed7aa;padding:15px;border-radius:6px;margin-top:15px}
+.physical h3{margin:0 0 8px;color:#9a3412;font-size:16px}
+.decision{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:15px}
+.decision select,.decision input{max-width:340px}
+.notice{display:none;padding:12px;margin-top:12px;border-radius:5px;font-size:13px}.notice.ok{display:block;background:#dcfce7;color:#166534}.notice.warn{display:block;background:#fef3c7;color:#92400e}
+@media(max-width:1000px){.sku-grid{grid-template-columns:repeat(3,1fr)}.criteria{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.wizard{display:grid;grid-template-columns:repeat(2,1fr)}.sku-grid,.criteria{grid-template-columns:1fr}}
+</style>
+    <section class="panel active" id="p1">
+      <div class="card">
+        
+        <div class="grid" style="margin-top:16px">
+          <div><label>Khách hàng</label><select id="customer"><option value="BS">BS-BASSETT A</option><option value="ABC">ABC FURNITURE</option><option value="XYZ">XYZ HOME</option></select></div>
+          <div><label>Mã lô</label><input id="lot" value="LOT-2026-1008"></div>
+          <div><label>Tần suất xuất nhập</label><select id="freq"><option value="high">Cao</option><option value="medium" selected>Trung bình</option><option value="low">Thấp</option></select></div>
+          <div><label>Điều kiện lưu trữ</label><select id="condition"><option>Bình thường</option><option>Kiểm soát độ ẩm</option></select></div>
+        </div>
+
+        <div class="sku" id="sku1box">
+          <div class="sku-title">SKU 1</div>
+          <div class="sku-grid">
+            <div><label>SKU / Loại hàng</label><select id="sku1" onchange="syncSku(1)"><option value="CHAIR">BAS-CHAIR-01 – Ghế</option><option value="TABLE">BAS-TABLE-01 – Bàn</option></select></div>
+            <div><label>Số pallet</label><input id="qty1" type="number" min="1" value="4"></div>
+            <div><label>Kích thước pallet</label><input id="dim1" class="readonly" readonly></div>
+            <div><label>Khối lượng / pallet</label><input id="weight1" class="readonly" readonly></div>
+            <div><label>Tải trọng yêu cầu</label><input id="load1" class="readonly" readonly></div>
+          </div>
+        </div>
+
+        <div class="sku" id="sku2box">
+          <div class="sku-title">SKU 2</div>
+          <div class="sku-grid">
+            <div><label>SKU / Loại hàng</label><select id="sku2" onchange="syncSku(2)"><option value="TABLE">BAS-TABLE-01 – Bàn</option><option value="CHAIR">BAS-CHAIR-01 – Ghế</option></select></div>
+            <div><label>Số pallet</label><input id="qty2" type="number" min="1" value="2"></div>
+            <div><label>Kích thước pallet</label><input id="dim2" class="readonly" readonly></div>
+            <div><label>Khối lượng / pallet</label><input id="weight2" class="readonly" readonly></div>
+            <div><label>Tải trọng yêu cầu</label><input id="load2" class="readonly" readonly></div>
+          </div>
+        </div>
+        
+        <div id="n1" class="notice"></div>
+        <div class="actions"><div></div><div><button class="btn blue" onclick="next(3)">Tiếp tục →</button></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p3">
+      <div class="card">
+        <div class="summary">
+          <div class="stat">Khách hàng<b id="scustomer">-</b></div>
+          <div class="stat">Mã lô<b id="slot">-</b></div>
+          <div class="stat">Tổng pallet<b id="sqty">-</b></div>
+          <div class="stat">Số SKU<b id="ssku">-</b></div>
+        </div>
+        <button class="btn" style="margin-top:0" onclick="recommend()">🔎 GỢI Ý VỊ TRÍ</button>
+        <div id="result" style="display:none;margin-top:18px">
+          <div class="summary">
+            <div class="stat">Vị trí ưu tiên<b id="best">-</b></div>
+            <div class="stat">Mức độ phù hợp<b id="score">-</b></div>
+            <div class="stat">Còn trống<b id="capacity">-</b></div>
+            <div class="stat">Khoảng cách<b id="distance">-</b></div>
+          </div>
+          <div class="small" style="margin:12px 0 5px">Danh sách 15 hạng vị trí</div>
+          <table><thead><tr>
+            <th>Hạng</th><th>Mã vị trí</th><th>Khách hàng</th><th>Tầng</th><th>Còn trống</th>
+            <th>Phù hợp</th><th>Điểm</th><th>Lý do</th><th>Chọn</th>
+          </tr></thead><tbody id="rows"></tbody></table>
+          <div class="physical" style="margin-top:16px">
+            <h3>💡 Vị trí đề xuất để nhân viên lựa chọn</h3>
+            <div id="suggestedList" class="decision"></div>
+          </div>
+        </div>
+        <div id="n3" class="notice"></div>
+        <div class="actions"><div></div><div><button class="btn blue" onclick="next(5)">Tiếp tục →</button></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p5">
+      <div class="card">
+        
+        <div class="decision"><b>BWMS ưu tiên:</b><span id="physicalSuggested" class="badge good" style="font-size:13px">-</span></div>
+        <div class="physical" style="background:#f8fafc;border-color:#cbd5e1">
+          <h3 style="color:#1553a5">Chọn vị trí</h3>
+          <div id="physicalChoices" class="decision"></div>
+          <div style="margin-top:10px"><input id="rejectReason" placeholder="Lý do không chọn vị trí BWMS gợi ý" style="max-width:500px"></div>
+        </div>
+        <div id="n5" class="notice"></div>
+        <div class="actions"><div></div><div><button class="btn green" onclick="finishDemo()">Hoàn tất</button></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p6">
+      <div class="card">
+        <div class="summary">
+          <div class="stat">Lần chạy<b id="runs">0</b></div>
+          <div class="stat">Chấp nhận gợi ý<b id="accept">0</b></div>
+          <div class="stat">Chọn vị trí khác<b id="override">0</b></div>
+          <div class="stat">Tỷ lệ dùng gợi ý<b id="rate">0%</b></div>
+        </div>
+        <table><thead><tr><th>Thời gian</th><th>Mã lô</th><th>BWMS gợi ý</th><th>Vị trí thực tế</th><th>Kết quả</th><th>Lý do</th></tr></thead><tbody id="audit"></tbody></table>
+        <div class="info" style="margin-top:16px">Theo dõi thời gian lựa chọn vị trí, số trường hợp không sử dụng gợi ý và đối chiếu vị trí trên BWMS với thực tế để điều chỉnh tiêu chí khi cần.</div>
+        <div class="actions"><div></div><div><button class="btn blue" onclick="restart()">↺ Làm lại từ Bước 1</button></div></div>
+      </div>
+    </section>
+<div class="footer" style="display:none"></div>
+</main>
+</div>
+
+<script>
+const catalog={
+  CHAIR:{dim:"120 × 100 × 150 cm",weight:650,load:800},
+  TABLE:{dim:"140 × 110 × 160 cm",weight:850,load:1000}
+};
+
+const customers=[
+  {code:"BS",name:"BS-BASSETT A"},
+  {code:"ABC",name:"ABC FURNITURE"},
+  {code:"XYZ",name:"XYZ HOME"}
+];
+
+const locationPool=[
+  // BS-BASSETT A: 5 hạng, 3 phù hợp + 2 không phù hợp
+  {code:"6111-52-3-A",customer:"BS-BASSETT A",floor:3,empty:8,distance:28,base:96,capacity:1000,size:["CHAIR","TABLE"]},
+  {code:"6111-51-2-B",customer:"BS-BASSETT A",floor:2,empty:10,distance:35,base:93,capacity:1000,size:["CHAIR","TABLE"]},
+  {code:"6111-55-4-C",customer:"BS-BASSETT A",floor:4,empty:12,distance:46,base:89,capacity:1100,size:["CHAIR","TABLE"]},
+  {code:"6111-56-4-D",customer:"BS-BASSETT A",floor:4,empty:6,distance:42,base:68,capacity:1100,size:["TABLE"]},
+  {code:"6111-60-5-B",customer:"BS-BASSETT A",floor:5,empty:2,distance:55,base:60,capacity:600,size:["CHAIR"]},
+
+  // ABC FURNITURE: 5 hạng, 3 phù hợp + 2 không phù hợp
+  {code:"6211-31-2-A",customer:"ABC FURNITURE",floor:2,empty:9,distance:25,base:95,capacity:1000,size:["CHAIR","TABLE"]},
+  {code:"6211-33-3-B",customer:"ABC FURNITURE",floor:3,empty:11,distance:31,base:92,capacity:1100,size:["CHAIR","TABLE"]},
+  {code:"6211-35-4-C",customer:"ABC FURNITURE",floor:4,empty:7,distance:44,base:88,capacity:1000,size:["TABLE","CHAIR"]},
+  {code:"6211-38-4-D",customer:"ABC FURNITURE",floor:4,empty:5,distance:47,base:66,capacity:600,size:["CHAIR"]},
+  {code:"6211-40-5-E",customer:"ABC FURNITURE",floor:5,empty:2,distance:58,base:62,capacity:600,size:["TABLE"]},
+
+  // XYZ HOME: 5 hạng, 3 phù hợp + 2 không phù hợp
+  {code:"6311-21-2-A",customer:"XYZ HOME",floor:2,empty:8,distance:27,base:94,capacity:1000,size:["CHAIR","TABLE"]},
+  {code:"6311-23-3-B",customer:"XYZ HOME",floor:3,empty:10,distance:34,base:91,capacity:1100,size:["CHAIR","TABLE"]},
+  {code:"6311-25-4-C",customer:"XYZ HOME",floor:4,empty:9,distance:43,base:87,capacity:1000,size:["TABLE","CHAIR"]},
+  {code:"6311-27-4-D",customer:"XYZ HOME",floor:4,empty:4,distance:50,base:64,capacity:600,size:["CHAIR"]},
+  {code:"6311-29-5-E",customer:"XYZ HOME",floor:5,empty:2,distance:60,base:60,capacity:600,size:["TABLE"]}
+];
+
+let step=1,lastBest=null,lastResults=[],audit=[],stats={runs:0,accept:0,override:0};
+
+function syncSku(n){
+  const k=document.getElementById("sku"+n).value,c=catalog[k];
+  document.getElementById("dim"+n).value=c.dim;
+  document.getElementById("weight"+n).value=c.weight+" kg";
+  document.getElementById("load"+n).value=c.load+" kg";
+}
+function cust(){
+  const v=document.getElementById("customer").value;
+  return customers.find(x=>x.code===v)?.name || "BS-BASSETT A";
+}
+function valid1(){
+  const lot=document.getElementById("lot").value.trim();
+  const q1=+document.getElementById("qty1").value,q2=+document.getElementById("qty2").value;
+  if(!lot){notice("n1","Vui lòng nhập mã lô.","warn");return false}
+  if(q1<1||q2<1){notice("n1","Số pallet của từng SKU phải lớn hơn 0.","warn");return false}
+  return true;
+}
+function next(n){
+  if(n===3&&!valid1())return;
+  if(n===5&&!lastBest){notice("n3","Hãy chạy gợi ý vị trí trước.","warn");return;}
+  step=n;
+  document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+  const target=document.getElementById("p"+n);
+  if(target) target.classList.add("active");
+  if(n===3) summary();
+  if(n===5) preparePhysicalChoices();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function summary(){
+  document.getElementById("scustomer").textContent=cust();
+  document.getElementById("slot").textContent=document.getElementById("lot").value;
+  document.getElementById("sqty").textContent=(+document.getElementById("qty1").value)+(+document.getElementById("qty2").value);
+  document.getElementById("ssku").textContent="2";
+}
+function makeReason(x, customer, compatible, enough, weightOK){
+  const r=[];
+  if(x.customer!==customer) r.push("không thuộc khu khách hàng");
+  if(!enough) r.push("không đủ sức chứa");
+  if(!compatible) r.push("SKU/kích thước không phù hợp");
+  if(!weightOK) r.push("vượt tải trọng");
+  if(r.length===0){
+    if(x.floor<=2) r.push("tầng thấp, thuận tiện thao tác");
+    else if(x.distance<=35) r.push("vị trí thuận tiện, gần khu thao tác");
+    else r.push("đủ sức chứa và phù hợp điều kiện SKU");
+    return "Phù hợp – "+r.join(", ");
+  }
+  return "Không phù hợp – "+r.join(", ");
+}
+function recommend(){
+  if(!valid1())return;
+  summary();
+  const customer=cust(),freq=document.getElementById("freq").value;
+  const keys=[document.getElementById("sku1").value,document.getElementById("sku2").value];
+  const qty=+document.getElementById("qty1").value + +document.getElementById("qty2").value;
+  const maxW=Math.max(catalog[keys[0]].weight,catalog[keys[1]].weight);
+
+  // Chỉ 3 vị trí thuộc khách hàng hiện tại được đánh dấu phù hợp.
+  // 2 vị trí còn lại của khách hàng được giữ trong top-5 nhưng có lỗi điều kiện.
+  let a=locationPool.map(x=>({...x}));
+  a.forEach(x=>{
+    const compatible=keys.every(k=>x.size.includes(k));
+    const enough=qty<=x.empty;
+    const weightOK=maxW<=x.capacity;
+    x.ok=x.customer===customer && enough && compatible && weightOK;
+    let s=x.base;
+    if(x.customer===customer) s+=10; else s-=28;
+    if(enough) s+=5; else s-=25;
+    if(compatible) s+=5; else s-=30;
+    if(weightOK) s+=5; else s-=28;
+    if(freq==="high"&&x.floor<=2)s+=4;
+    x.score=Math.max(10,Math.min(99,Math.round(s)));
+    x.reason=makeReason(x,customer,compatible,enough,weightOK);
+  });
+
+  // Hạng 1-5 cho từng khách hàng, mỗi khách hàng có đúng 3 phù hợp + 2 không phù hợp.
+  const grouped=customers.map(c=>{
+    const group=a.filter(x=>x.customer===c.name);
+    group.sort((x,y)=>(y.ok-x.ok)||(y.score-x.score));
+    return group.slice(0,5);
+  });
+  lastResults=[...grouped[0],...grouped[1],...grouped[2]];
+
+  // Ép đúng 3 vị trí phù hợp ở khách hàng đang xử lý; các khách hàng khác cũng có 3 vị trí phù hợp.
+  // Với khách hàng hiện tại, vị trí phù hợp được ưu tiên theo điểm.
+  const currentGroup=grouped.find(g=>g[0]?.customer===customer) || [];
+  lastBest=currentGroup.find(x=>x.ok) || null;
+
+  document.getElementById("result").style.display="block";
+  if(lastBest){
+    document.getElementById("best").textContent=lastBest.code;
+    document.getElementById("score").textContent=lastBest.score+"%";
+    document.getElementById("capacity").textContent=lastBest.empty+" pallet";
+    document.getElementById("distance").textContent=lastBest.distance+" m";
+    document.getElementById("physicalSuggested").textContent=lastBest.code;
+  }
+
+  let rank=0,html="";
+  grouped.forEach(group=>{
+    group.forEach(x=>{
+      rank++;
+      html+=`<tr class="${lastBest&&x.code===lastBest.code?'recommend':''}">
+        <td class="rank">#${rank}</td>
+        <td><b>${x.code}</b></td>
+        <td>${x.customer}</td>
+        <td>${x.floor}</td>
+        <td>${x.empty}</td>
+        <td><span class="badge ${x.ok?'good':'full'}">${x.ok?'Phù hợp':'Không phù hợp'}</span></td>
+        <td><span class="badge ${x.score>=85?'good':x.score>=65?'warn':'full'}">${x.score}%</span></td>
+        <td class="reason">${x.reason}</td>
+        <td>${x.ok?`<button class="btn blue choose-row" style="padding:6px 10px;font-size:11px" onclick="selectFromStep3('${x.code}')">Chọn</button>`:'—'}</td>
+      </tr>`;
+    });
+  });
+  document.getElementById("rows").innerHTML=html;
+
+  const currentCompatible=currentGroup.filter(x=>x.ok);
+  document.getElementById("suggestedList").innerHTML=currentCompatible.slice(0,3).map((x,i)=>
+    `<button class="btn ${i===0?'green':'blue'}" style="margin-top:0" onclick="selectFromStep3('${x.code}')">${i===0?'★ Ưu tiên: ':'Đề xuất '+(i+1)+': '}${x.code} – ${x.score}%</button>`
+  ).join("");
+
+  // Store exactly the 3 usable options for Step 5.
+  window.step3Options=currentCompatible.slice(0,3);
+  stats.runs++;renderStats();
+  notice("n3","Đã tạo 15 hạng: 5 hạng cho mỗi khách hàng, trong đó mỗi khách hàng có 3 vị trí phù hợp và 2 vị trí không phù hợp.","ok");
+}
+function selectFromStep3(code){
+  const x=lastResults.find(z=>z.code===code);
+  if(!x||!x.ok)return;
+  lastBest=x;
+  document.getElementById("best").textContent=x.code;
+  document.getElementById("score").textContent=x.score+"%";
+  document.getElementById("capacity").textContent=x.empty+" pallet";
+  document.getElementById("distance").textContent=x.distance+" m";
+  document.getElementById("physicalSuggested").textContent=x.code;
+  preparePhysicalChoices();
+  notice("n3","Đã chọn "+x.code+" làm vị trí nhân viên sẽ kiểm tra thực tế.","ok");
+}
+function preparePhysicalChoices(){
+  const opts=window.step3Options||[];
+  document.getElementById("physicalChoices").innerHTML=opts.map((x,i)=>
+    `<button class="btn ${x.code===lastBest?.code?'green':'blue'}" style="margin-top:0" onclick="${x.code===lastBest?.code?'acceptSuggested()':`acceptAlternative('${x.code}')`}">${x.code===lastBest?.code?'✓ Chấp nhận '+x.code:'↔ Chọn '+x.code}</button>`
+  ).join("");
+}
+function acceptSuggested(){
+  if(!lastBest)return;
+  stats.accept++;
+  audit.unshift({time:new Date().toLocaleTimeString("vi-VN"),lot:document.getElementById("lot").value,suggested:lastBest.code,actual:lastBest.code,result:"Đã chấp nhận",reason:"Phù hợp – nhân viên kiểm tra thực tế và xác nhận vị trí."});
+  renderAudit();renderStats();notice("n5","Đã xác nhận vị trí "+lastBest.code+".","ok");
+}
+function acceptAlternative(code){
+  const alt=(window.step3Options||[]).find(x=>x.code===code);
+  if(!alt)return;
+  const reason=document.getElementById("rejectReason").value.trim();
+  if(!reason){notice("n5","Vui lòng nhập lý do khi không chọn vị trí BWMS ưu tiên.","warn");return}
+  stats.override++;
+  audit.unshift({time:new Date().toLocaleTimeString("vi-VN"),lot:document.getElementById("lot").value,suggested:lastBest.code,actual:alt.code,result:"Chọn vị trí khác",reason});
+  lastBest=alt;
+  renderAudit();renderStats();notice("n5","Đã ghi nhận nhân viên chọn vị trí khác phù hợp: "+alt.code+".","ok");
+}
+function renderStats(){
+  document.getElementById("runs").textContent=stats.runs;
+  document.getElementById("accept").textContent=stats.accept;
+  document.getElementById("override").textContent=stats.override;
+  const t=stats.accept+stats.override;
+  document.getElementById("rate").textContent=t?Math.round(stats.accept/t*100)+"%":"0%";
+}
+function renderAudit(){
+  document.getElementById("audit").innerHTML=audit.length?audit.map(a=>`<tr><td>${a.time}</td><td>${a.lot}</td><td><b>${a.suggested}</b></td><td><b>${a.actual}</b></td><td>${a.result}</td><td>${a.reason}</td></tr>`).join(""):'<tr><td colspan="6" style="text-align:center;color:#64748b">Chưa có dữ liệu.</td></tr>';
+}
+function notice(id,msg,type){const e=document.getElementById(id);e.className="notice "+type;e.textContent=msg}
+function finishDemo(){
+  const n=document.getElementById("n5");
+  if(n){n.className="notice ok";n.textContent="Đã hoàn tất xác nhận vị trí thực tế trên BWMS.";}
+}
+function restart(){location.reload()}
+document.querySelectorAll(".wstep").forEach(x=>x.onclick=()=>next(+x.dataset.step));
+syncSku(1);syncSku(2);renderStats();renderAudit();
+</script>
+
+</body>
+</html>
+
+<style>
+.footer{display:none!important}
+.wizard{margin-top:0}
+.content{padding-top:18px}
+</style>
+
+<style>
+.wizard{display:none!important}
+.footer{display:none!important}
+.content{padding-top:18px}
+</style>
+
+<style>
+.wizard,.footer{display:none!important}
+.content{padding-top:18px}
+.panel h2{display:none!important}
+</style>
+
+<style>
+.wizard,.footer{display:none!important}
+.content{padding-top:18px}
+.physical h3{margin-bottom:10px}
+</style>
